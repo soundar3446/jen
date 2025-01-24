@@ -35,6 +35,10 @@ stage('SonarQube') {
                     -Dsonar.projectKey="shopping-cart"
                 '''
             }
+	def qualityGate = waitForQualityGate()  // This will block the pipeline until SonarQube analysis is complete
+            if (qualityGate.status != 'OK') {
+                error "Quality gate failed: ${qualityGate.status}"  // Fail the build if quality gate fails
+            }
         }
     }
 }
